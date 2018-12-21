@@ -6,9 +6,10 @@ public class PlayerLives : MonoBehaviour {
 
     public int maxLives = 5;
     int lives = 5;
+    public GameObject wall;
 	// Use this for initialization
 	void Start () {
-		
+        lives = maxLives;
 	}
 	
 	// Update is called once per frame
@@ -24,5 +25,9 @@ public class PlayerLives : MonoBehaviour {
     {
         if (collision.gameObject.tag == "disk") 
             lives--;
+        if(lives == 0)
+        {
+            wall.SetActive(true);
+        }
     }
 }

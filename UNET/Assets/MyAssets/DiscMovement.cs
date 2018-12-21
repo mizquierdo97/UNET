@@ -20,15 +20,14 @@ public class DiscMovement : NetworkBehaviour
     public Vector3 velocity = Vector3.zero;
 
     void Start () {
-        rigid = GetComponent<Rigidbody>();      
-        //rigid.AddForce(transform.right*50);
+        rigid = GetComponent<Rigidbody>();
         discCollider = GetComponent<SphereCollider>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        if(manager.playerCount == 1 && !start)
+        if(manager.playerCount == 4 && !start)
         {
             rigid.velocity = transform.right * speed;
             start = true;
