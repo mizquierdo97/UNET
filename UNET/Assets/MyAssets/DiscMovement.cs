@@ -7,19 +7,20 @@ public class DiscMovement : NetworkBehaviour
 {
 
     Rigidbody rigid;
-    public float speed = 5;
+    public float speed = 7;
     bool wait = false;
     float disableTimer = 0.0f;
     // Use this for initialization
     Collider playerCollider;
     SphereCollider discCollider;
+    public PlayerManager manager;
+    bool start = false;
 
     [SyncVar(hook = "SyncVelocityChanged")]
     public Vector3 velocity = Vector3.zero;
 
     void Start () {
-        rigid = GetComponent<Rigidbody>();
-        rigid.velocity = transform.right * speed;
+        rigid = GetComponent<Rigidbody>();      
         //rigid.AddForce(transform.right*50);
         discCollider = GetComponent<SphereCollider>();
 	}
@@ -27,6 +28,11 @@ public class DiscMovement : NetworkBehaviour
 	// Update is called once per frame
 	void Update () {
 
+        if(manager.playerCount == 1 && !start)
+        {
+            rigid.velocity = transform.right * speed;
+            start = true;
+        }
         if(hasAuthority)
         {
             SyncVelocityChanged(rigid.velocity);
@@ -50,14 +56,19 @@ public class DiscMovement : NetworkBehaviour
         }
     }
 
-
     void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Player")
         {
             playerCollider = collision.collider;
             wait = true;
-        }           
+            rigid.velocity = rigid.velocity * 1.1f;
+        }
+        else if(collision.gameObject.tag == "pointCollider")
+        {
+            transform.position = new Vector3(0, -0.9f, 0);
+            rigid.velocity = transform.right * speed;
+        }
     }
     void SyncVelocityChanged(Vector3 vel) { velocity = vel; }
 }
